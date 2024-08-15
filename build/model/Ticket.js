@@ -1,16 +1,16 @@
 export class Ticket {
+    id = 0;
+    data_criacao = '';
+    nome_evento = '';
+    artista = '';
+    data_evento = '';
+    local_evento = '';
+    horario = '';
+    preco = 0;
+    setor = '';
+    disponibilidade = false;
+    tipo = '';
     constructor(id = 0, data_criacao = '', nome_evento = '', artista = '', data_evento = '', local_evento = '', horario = '', preco = 0, setor = '', disponibilidade = false, tipo = '') {
-        this.id = 0;
-        this.data_criacao = '';
-        this.nome_evento = '';
-        this.artista = '';
-        this.data_evento = '';
-        this.local_evento = '';
-        this.horario = '';
-        this.preco = 0;
-        this.setor = '';
-        this.disponibilidade = false;
-        this.tipo = '';
         this.id = id;
         this.data_criacao = data_criacao;
         this.nome_evento = nome_evento;

@@ -1,8 +1,8 @@
 import { Ticket } from "./Ticket";
 export class TicketComun extends Ticket {
+    restricoes = '';
     constructor(id, data_criacao, nome_evento, artista, data_evento, local_evento, horario, preco, setor, disponibilidade, restricoes) {
         super();
-        this.restricoes = '';
         this.id = id;
         this.data_criacao = data_criacao;
         this.nome_evento = nome_evento;

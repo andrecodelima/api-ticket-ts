@@ -1,9 +1,9 @@
 import { Ticket } from "./Ticket";
 export class TicketVip extends Ticket {
+    beneficios = '';
+    entrada_prioritaria = false;
     constructor(id, data_criacao, nome_evento, artista, data_evento, local_evento, horario, preco, setor, disponibilidade, beneficios, entrada_prioritaria) {
         super();
-        this.beneficios = '';
-        this.entrada_prioritaria = false;
         this.id = id;
         this.data_criacao = data_criacao;
         this.nome_evento = nome_evento;

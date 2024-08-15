@@ -1,5 +1,5 @@
 import { Router } from "express";
-import { insereTicket,getAllTicket, updateTicket, removeTicket, getTicketById } from "../controller/TicketController";
+import { insereTicket,getAllTicket, updateTicket, removeTicket, getTicketById } from "../controller/TicketController.js";
 const router = Router()
 
 router.get('/',(req, resp)=> resp.status(200).send('Home Ticket'))
