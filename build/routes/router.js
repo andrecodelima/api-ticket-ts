@@ -1,7 +1,7 @@
 import { Router } from "express";
 import { insereTicket, getAllTicket, updateTicket, removeTicket, getTicketById } from "../controller/TicketController.js";
 const router = Router();
-router.get('/', (req, resp) => resp.status(200).send('Home Ticket'));
+router.get('/', (req, resp) => resp.status(200).send('Seja bem-vindo ao sistema - Ticket Fácil ✅'));
 router.get('/ticket', getAllTicket);
 router.get('/ticket/id', getTicketById);
 router.post('/ticket', insereTicket);

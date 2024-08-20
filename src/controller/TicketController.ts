@@ -1,5 +1,5 @@
 import { Request, Response} from 'express'
-import { openDb } from "../infrastructure/config/configDb"
+import { openDb } from "../infrastructure/config/configDb.js"
 
 
 // GET ALL
