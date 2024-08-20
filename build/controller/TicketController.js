@@ -139,46 +139,59 @@ export function insereTicket(req, resp) {
 export function updateTicket(req, resp) {
     return __awaiter(this, void 0, void 0, function* () {
         try {
-            const { id, tipo, data_criacao, nome_evento, artista, data_evento, local_evento, horario, preco, setor, restricoes, disponibilidade, beneficios, entrada_prioritaria } = req.body;
+            const ticket = req.body;
             const db = yield openDb();
             const sql = `
-        
-            UPDATE ticket SET 
-                tipo = ?, 
-                data_criacao = ?, 
-                nome_evento = ?, 
-                artista = ?, 
-                data_evento = ?, 
-                local_evento = ?, 
-                horario = ?, 
-                preco = ?, 
-                setor = ?, 
-                restricoes = ?, 
-                disponibilidade = ?, 
-                beneficios = ?, 
+            UPDATE ticket SET
+                tipo = ?,
+                data_criacao = ?,
+                nome_evento = ?,
+                artista = ?,
+                data_evento = ?,
+                local_evento = ?,
+                horario = ?,
+                preco = ?,
+                setor = ?,
+                restricoes = ?,
+                disponibilidade = ?,
+                beneficios = ?,
                 entrada_prioritaria = ?
             WHERE id = ?
         `;
             const params = [
-                tipo,
-                data_criacao,
-                nome_evento,
-                artista,
-                data_evento,
-                local_evento,
-                horario,
-                preco,
-                setor,
-                restricoes,
-                disponibilidade,
-                beneficios,
-                entrada_prioritaria,
-                id
+                ticket.tipo,
+                ticket.data_criacao,
+                ticket.nome_evento,
+                ticket.artista,
+                ticket.data_evento,
+                ticket.local_evento,
+                ticket.horario,
+                ticket.preco,
+                ticket.setor,
+                ticket.restricoes,
+                ticket.disponibilidade,
+                ticket.beneficios,
+                ticket.entrada_prioritaria,
+                ticket.id
             ];
+            const ticket_existente = yield db.get('SELECT * FROM ticket WHERE id = ?', [ticket.id]);
+            if (!ticket_existente) {
+                return resp.status(404).json({
+                    "statusCode": 404,
+                    "message": 'Ticket não encontrado'
+                });
+            }
+            const result = yield db.run(sql, params);
+            if (result.changes === 0) {
+                return resp.status(400).json({
+                    "statusCode": 400,
+                    "message": 'Nenhuma alteração feita, verifique os dados fornecidos'
+                });
+            }
             yield db.run(sql, params);
             console.log('Registro atualizado com sucesso');
-            resp.status(200).json({
-                "statusCode": 200,
+            resp.status(201).json({
+                "statusCode": 201,
                 "message": 'Registro atualizado com sucesso'
             });
         }
