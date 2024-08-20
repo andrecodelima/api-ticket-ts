@@ -35,7 +35,6 @@ export function getTicketById(req, resp) {
             const ticket = yield db.get('SELECT * FROM ticket WHERE id = ?', [id]);
             console.log(`Ticket: ${ticket}`);
             resp.status(200).json({
-                "statusCode": 200,
                 data: ticket
             });
         }
@@ -57,12 +56,64 @@ export function insereTicket(req, resp) {
             let sql;
             let params;
             if (tipo === 'vip') {
-                sql = 'INSERT INTO ticket(tipo, data_criacao, nome_evento, artista, data_evento, local_evento, horario, preco, setor, restricoes, disponibilidade, beneficios, entrada_prioritaria) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)';
-                params = [tipo, data_criacao, nome_evento, artista, data_evento, local_evento, horario, preco, setor, restricoes, Number(disponibilidade), beneficios, Number(entrada_prioritaria)];
+                sql = 'INSERT INTO ticket(' +
+                    'tipo,' +
+                    'data_criacao,' +
+                    'nome_evento,' +
+                    'artista,' +
+                    'data_evento,' +
+                    'local_evento,' +
+                    'horario,' +
+                    'preco,' +
+                    'setor,' +
+                    'restricoes,' +
+                    'disponibilidade,' +
+                    'beneficios,' +
+                    'entrada_prioritaria)' +
+                    'VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)';
+                params =
+                    [
+                        tipo,
+                        data_criacao,
+                        nome_evento,
+                        artista,
+                        data_evento,
+                        local_evento,
+                        horario,
+                        preco,
+                        setor,
+                        restricoes,
+                        Number(disponibilidade),
+                        beneficios,
+                        Number(entrada_prioritaria)
+                    ];
             }
             else if (tipo === 'comum') {
-                sql = 'INSERT INTO ticket(tipo, data_criacao, nome_evento, artista, data_evento, local_evento, horario, preco, setor, restricoes) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)';
-                params = [tipo, data_criacao, nome_evento, artista, data_evento, local_evento, horario, preco, setor, restricoes];
+                sql = 'INSERT INTO ticket(' +
+                    'tipo,' +
+                    'data_criacao,' +
+                    'nome_evento,' +
+                    'artista,' +
+                    'data_evento,' +
+                    'local_evento,' +
+                    'horario,' +
+                    'preco,' +
+                    'setor,' +
+                    'restricoes)' +
+                    'VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)';
+                params =
+                    [
+                        tipo,
+                        data_criacao,
+                        nome_evento,
+                        artista,
+                        data_evento,
+                        local_evento,
+                        horario,
+                        preco,
+                        setor,
+                        restricoes
+                    ];
             }
             else {
                 resp.status(400).json({ error: 'Tipo inválido' });
