@@ -1,5 +1,8 @@
 # Gerenciamento de Tickets 🎫
-![image](https://github.com/user-attachments/assets/c9e02e32-0da9-4c81-827c-d01c6b56bf39)
+
+## StepComputerAcademy - Modulo 5 - TypeScript
+
+![image](https://github.com/user-attachments/assets/034425d4-05e4-44f3-8655-411f6735b677)
 
 
 ## Descrição 📝
