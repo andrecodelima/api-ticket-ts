@@ -1,4 +1,6 @@
 # Gerenciamento de Tickets 🎫
+![image](https://github.com/user-attachments/assets/c9e02e32-0da9-4c81-827c-d01c6b56bf39)
+
 
 ## Descrição 📝
 Desenvolvimento de uma API para o projeto final de TypeScript, módulo 5, da Step Computer Academy.
