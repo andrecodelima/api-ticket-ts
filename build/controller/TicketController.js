@@ -18,10 +18,10 @@ export function getAllTicket(req, resp) {
             resp.json(tickets);
         }
         catch (e) {
-            console.log(`Erro ao recuperar registro -- ${e}`);
+            // console.log(`Erro ao recuperar registro -- ${e}`)
             resp.status(500).json({
                 "statusCode": 500,
-                "message": 'Erro ao recuperar registro'
+                "message": `Erro ao recuperar registro - ${e}`
             });
         }
     });
@@ -32,17 +32,22 @@ export function getTicketById(req, resp) {
         try {
             const id = req.body.id;
             const db = yield openDb();
-            const ticket = yield db.get('SELECT * FROM ticket WHERE id = ?', [id]);
-            console.log(`Ticket: ${ticket}`);
+            const ticket_existente = yield db.get('SELECT * FROM ticket WHERE id = ?', [id]);
+            if (!ticket_existente) {
+                return resp.status(404).json({
+                    "statusCode": 404,
+                    "message": `ID: ${id} não encontrado`
+                });
+            }
             resp.status(200).json({
-                data: ticket
+                data: ticket_existente
             });
         }
         catch (e) {
-            console.log(`Erro ao recuperar registro -- ${e}`);
+            // console.log(`Erro ao recuperar registro -- ${e}`)
             resp.status(500).json({
                 "statusCode": 500,
-                "message": 'Erro ao recuperar registro'
+                "message": `Erro ao recuperar registro ${e}`
             });
         }
     });
@@ -56,21 +61,24 @@ export function insereTicket(req, resp) {
             let sql;
             let params;
             if (tipo === 'vip') {
-                sql = 'INSERT INTO ticket(' +
-                    'tipo,' +
-                    'data_criacao,' +
-                    'nome_evento,' +
-                    'artista,' +
-                    'data_evento,' +
-                    'local_evento,' +
-                    'horario,' +
-                    'preco,' +
-                    'setor,' +
-                    'restricoes,' +
-                    'disponibilidade,' +
-                    'beneficios,' +
-                    'entrada_prioritaria)' +
-                    'VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)';
+                sql =
+                    `INSERT INTO ticket( 
+
+                    tipo, 
+                    data_criacao, 
+                    nome_evento, 
+                    artista, 
+                    data_evento, 
+                    local_evento, 
+                    horario, 
+                    preco, 
+                    setor,
+                    restricoes,
+                    disponibilidade,
+                    beneficios, 
+                    entrada_prioritaria) 
+
+                    VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`;
                 params =
                     [
                         tipo,
@@ -89,18 +97,21 @@ export function insereTicket(req, resp) {
                     ];
             }
             else if (tipo === 'comum') {
-                sql = 'INSERT INTO ticket(' +
-                    'tipo,' +
-                    'data_criacao,' +
-                    'nome_evento,' +
-                    'artista,' +
-                    'data_evento,' +
-                    'local_evento,' +
-                    'horario,' +
-                    'preco,' +
-                    'setor,' +
-                    'restricoes)' +
-                    'VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)';
+                sql =
+                    `INSERT INTO ticket( 
+
+                tipo,
+                data_criacao,
+                nome_evento
+                artista
+                data_evento
+                local_evento
+                horario
+                preco
+                setor
+                restricoes)
+
+                VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`;
                 params =
                     [
                         tipo,
@@ -120,17 +131,17 @@ export function insereTicket(req, resp) {
                 return;
             }
             yield db.run(sql, params);
-            console.log('Registro adicionado com sucesso');
+            // console.log('Registro adicionado com sucesso')
             resp.status(201).json({
                 "statusCode": 201,
                 "message": 'Registro adicionado com sucesso'
             });
         }
         catch (e) {
-            console.error(`Erro ao inserir registro -- ${e}`);
+            // console.error(`Erro ao inserir registro -- ${e}`)
             resp.status(500).json({
                 "statusCode": 500,
-                "message": 'Erro ao inserir registro'
+                "message": `Erro ao inserir registro ${e}`
             });
         }
     });
@@ -139,10 +150,11 @@ export function insereTicket(req, resp) {
 export function updateTicket(req, resp) {
     return __awaiter(this, void 0, void 0, function* () {
         try {
+            const id = req.body.id;
             const ticket = req.body;
             const db = yield openDb();
-            const sql = `
-            UPDATE ticket SET
+            const sql = `UPDATE ticket SET
+
                 tipo = ?,
                 data_criacao = ?,
                 nome_evento = ?,
@@ -156,8 +168,8 @@ export function updateTicket(req, resp) {
                 disponibilidade = ?,
                 beneficios = ?,
                 entrada_prioritaria = ?
-            WHERE id = ?
-        `;
+
+            WHERE id = ?`;
             const params = [
                 ticket.tipo,
                 ticket.data_criacao,
@@ -174,29 +186,30 @@ export function updateTicket(req, resp) {
                 ticket.entrada_prioritaria,
                 ticket.id
             ];
-            const ticket_existente = yield db.get('SELECT * FROM ticket WHERE id = ?', [ticket.id]);
+            const ticket_existente = yield db.get('SELECT * FROM ticket WHERE id = ?', [id]);
             if (!ticket_existente) {
                 return resp.status(404).json({
                     "statusCode": 404,
                     "message": 'Ticket não encontrado'
                 });
             }
-            const result = yield db.run(sql, params);
-            if (result.changes === 0) {
+            const verificao_update = yield db.run(sql, params);
+            if (verificao_update.changes === 0) {
                 return resp.status(400).json({
                     "statusCode": 400,
                     "message": 'Nenhuma alteração feita, verifique os dados fornecidos'
                 });
             }
-            yield db.run(sql, params);
-            console.log('Registro atualizado com sucesso');
-            resp.status(201).json({
-                "statusCode": 201,
-                "message": 'Registro atualizado com sucesso'
-            });
+            else {
+                // console.log('Registro atualizado com sucesso')
+                resp.status(201).json({
+                    "statusCode": 201,
+                    "message": 'Registro atualizado com sucesso'
+                });
+            }
         }
         catch (e) {
-            console.error(`Erro ao atualizar registro -- ${e}`);
+            // console.error(`Erro ao atualizar registro -- ${e}`)
             resp.status(500).json({
                 "statusCode": 500,
                 "message": 'Erro ao atualizar registro'
@@ -210,18 +223,22 @@ export function removeTicket(req, resp) {
         try {
             const id = req.body.id;
             const db = yield openDb();
-            yield db.run('DELETE FROM ticket WHERE id=?', [id]);
-            console.log('Registro removido com sucesso');
+            const result = yield db.run('DELETE FROM ticket WHERE id=?', [id]);
+            if (result.changes === 0) {
+                return resp.status(404).json({
+                    "statusCode": 404,
+                    "message": `Id ${id} não existe`
+                });
+            }
             resp.json({
                 "statusCode": 200,
-                "message": 'Registro removido com sucesso'
+                "message": `Registro ${id} removido com sucesso`
             });
         }
         catch (e) {
-            console.log(`Erro ao remover registro -- ${e}`);
             resp.json({
                 "statusCode": 500,
-                "message": `Erro ao remover registro`
+                "message": `Erro ao remover registro ${e}`
             });
         }
     });
