@@ -7,7 +7,8 @@
 
 
 CREATE TABLE ticket(
-    id INT,
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    tipo VARCHAR(30),
     data_criacao VARCHAR(50),
     nome_evento VARCHAR(150),
     artista VARCHAR(150),
@@ -17,7 +18,6 @@ CREATE TABLE ticket(
     preco VARCHAR(50),
     setor VARCHAR(50),
     disponibilidade boolean,
-    tipo VARCHAR(30),
     restricoes VARCHAR(150),
     beneficios VARCHAR(150),
     entrada_prioritaria boolean

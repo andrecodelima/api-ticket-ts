@@ -51,18 +51,18 @@ export function getTicketById(req, resp) {
 // INSERT TICKET
 export function insereTicket(req, resp) {
     return __awaiter(this, void 0, void 0, function* () {
-        const { tipo, nome_evento, artista, data_evento, horario, local_evento, setor, restricoes, beneficios, entrada_prioritaria } = req.body;
+        const { tipo, data_criacao, nome_evento, artista, data_evento, local_evento, horario, preco, setor, restricoes, disponibilidade, beneficios, entrada_prioritaria } = req.body;
         try {
             const db = yield openDb();
             let sql;
             let params;
             if (tipo === 'vip') {
-                sql = 'INSERT INTO ticket(tipo, nome_evento, artista, data_evento, horario, local_evento, setor, beneficios, entrada_prioritaria) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)';
-                params = [tipo, nome_evento, artista, data_evento, horario, local_evento, setor, beneficios, entrada_prioritaria];
+                sql = 'INSERT INTO ticket(tipo, data_criacao, nome_evento, artista, data_evento, local_evento, horario, preco, setor, restricoes, disponibilidade, beneficios, entrada_prioritaria) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)';
+                params = [tipo, data_criacao, nome_evento, artista, data_evento, local_evento, horario, preco, setor, restricoes, Number(disponibilidade), beneficios, Number(entrada_prioritaria)];
             }
             else if (tipo === 'comum') {
-                sql = 'INSERT INTO ticket(tipo, nome_evento, artista, data_evento, horario, local_evento, setor, restricoes) VALUES (?, ?, ?, ?, ?, ?, ?, ?)';
-                params = [tipo, nome_evento, artista, data_evento, horario, local_evento, setor, restricoes];
+                sql = 'INSERT INTO ticket(tipo, data_criacao, nome_evento, artista, data_evento, local_evento, horario, preco, setor, restricoes) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)';
+                params = [tipo, data_criacao, nome_evento, artista, data_evento, local_evento, horario, preco, setor, restricoes];
             }
             else {
                 resp.status(400).json({ error: 'Tipo inválido' });
@@ -88,21 +88,47 @@ export function insereTicket(req, resp) {
 export function updateTicket(req, resp) {
     return __awaiter(this, void 0, void 0, function* () {
         try {
-            const ticket = req.body;
+            const { id, tipo, data_criacao, nome_evento, artista, data_evento, local_evento, horario, preco, setor, restricoes, disponibilidade, beneficios, entrada_prioritaria } = req.body;
             const db = yield openDb();
-            yield db.run('UPDATE ticket SET ' +
-                'nome_evento=?, ' +
-                'artista=?, ' +
-                'data_evento=?, ' +
-                'horario=?, ' +
-                'local_evento=?, ' +
-                'setor=? ' +
-                'WHERE id=?', [ticket.nome_evento, ticket.artista, ticket.data_evento,
-                ticket.horario, ticket.local_evento, ticket.setor, ticket.id]);
-            console.log('Registro alterado com sucesso');
-            resp.json({
+            const sql = `
+        
+            UPDATE ticket SET 
+                tipo = ?, 
+                data_criacao = ?, 
+                nome_evento = ?, 
+                artista = ?, 
+                data_evento = ?, 
+                local_evento = ?, 
+                horario = ?, 
+                preco = ?, 
+                setor = ?, 
+                restricoes = ?, 
+                disponibilidade = ?, 
+                beneficios = ?, 
+                entrada_prioritaria = ?
+            WHERE id = ?
+        `;
+            const params = [
+                tipo,
+                data_criacao,
+                nome_evento,
+                artista,
+                data_evento,
+                local_evento,
+                horario,
+                preco,
+                setor,
+                restricoes,
+                disponibilidade,
+                beneficios,
+                entrada_prioritaria,
+                id
+            ];
+            yield db.run(sql, params);
+            console.log('Registro atualizado com sucesso');
+            resp.status(200).json({
                 "statusCode": 200,
-                "message": 'Registro alterado com sucesso'
+                "message": 'Registro atualizado com sucesso'
             });
         }
         catch (e) {

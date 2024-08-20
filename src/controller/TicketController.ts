@@ -55,7 +55,7 @@ export async function getTicketById(req:Request, resp:Response){
 // INSERT TICKET
 export async function insereTicket(req:Request, resp:Response){
    
-    const {tipo, nome_evento, artista, data_evento, horario, local_evento, setor, restricoes, beneficios, entrada_prioritaria} = req.body
+    const {tipo, data_criacao, nome_evento, artista, data_evento, local_evento, horario, preco, setor, restricoes, disponibilidade, beneficios, entrada_prioritaria} = req.body
 
     try{
         
@@ -64,12 +64,12 @@ export async function insereTicket(req:Request, resp:Response){
         let params:any[]
 
         if(tipo === 'vip'){
-            sql = 'INSERT INTO ticket(tipo, nome_evento, artista, data_evento, horario, local_evento, setor, beneficios, entrada_prioritaria) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)'
-            params = [tipo, nome_evento, artista, data_evento, horario, local_evento, setor, beneficios, entrada_prioritaria]
+            sql = 'INSERT INTO ticket(tipo, data_criacao, nome_evento, artista, data_evento, local_evento, horario, preco, setor, restricoes, disponibilidade, beneficios, entrada_prioritaria) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)'
+            params = [tipo, data_criacao, nome_evento, artista, data_evento, local_evento, horario, preco, setor, restricoes, Number(disponibilidade), beneficios, Number(entrada_prioritaria)];
         
         }else if(tipo === 'comum'){
-            sql = 'INSERT INTO ticket(tipo, nome_evento, artista, data_evento, horario, local_evento, setor, restricoes) VALUES (?, ?, ?, ?, ?, ?, ?, ?)'
-            params = [tipo, nome_evento, artista, data_evento, horario, local_evento, setor, restricoes]
+            sql = 'INSERT INTO ticket(tipo, data_criacao, nome_evento, artista, data_evento, local_evento, horario, preco, setor, restricoes) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)'
+            params = [tipo, data_criacao, nome_evento, artista, data_evento, local_evento, horario, preco, setor, restricoes]
         
         }else{
             resp.status(400).json({error:'Tipo inválido'})
@@ -97,39 +97,60 @@ export async function insereTicket(req:Request, resp:Response){
 }
 
 // UPDATE TICKET
-export async function updateTicket(req:Request, resp:Response) {
+export async function updateTicket(req: Request, resp: Response) {
     try {
-        const ticket = req.body;
+        const { id, tipo, data_criacao, nome_evento, artista, data_evento, local_evento, horario, preco, setor, restricoes, disponibilidade, beneficios, entrada_prioritaria } = req.body;
         const db = await openDb();
-        await db.run(
-            'UPDATE ticket SET '  +
-            'nome_evento=?, '     +
-            'artista=?, '         +
-            'data_evento=?, '     +
-            'horario=?, '         +
-            'local_evento=?, '    +
-            'setor=? '            +
-            'WHERE id=?',
+        
+        const sql = `
+        
+            UPDATE ticket SET 
+                tipo = ?, 
+                data_criacao = ?, 
+                nome_evento = ?, 
+                artista = ?, 
+                data_evento = ?, 
+                local_evento = ?, 
+                horario = ?, 
+                preco = ?, 
+                setor = ?, 
+                restricoes = ?, 
+                disponibilidade = ?, 
+                beneficios = ?, 
+                entrada_prioritaria = ?
+            WHERE id = ?
+        `;
+        
+        const params = [
+            tipo, 
+            data_criacao, 
+            nome_evento, 
+            artista, 
+            data_evento, 
+            local_evento, 
+            horario, 
+            preco, 
+            setor, 
+            restricoes, 
+            disponibilidade, 
+            beneficios, 
+            entrada_prioritaria, 
+            id
+        ];
 
-            [ticket.nome_evento, ticket.artista, ticket.data_evento, 
-            ticket.horario, ticket.local_evento, ticket.setor, ticket.id]
-        );
+        await db.run(sql, params);
+        console.log('Registro atualizado com sucesso');
+        resp.status(200).json({
+            "statusCode": 200,
+            "message": 'Registro atualizado com sucesso'
+        });
 
-        console.log('Registro alterado com sucesso')
-        resp.json(
-            {
-                "statusCode":200,
-                "message":'Registro alterado com sucesso'
-            }
-        )
-    }catch(e){
-        console.error(`Erro ao atualizar registro -- ${e}`)
-        resp.status(500).json(
-            {
-                "statusCode":500,
-                "message":'Erro ao atualizar registro'
-            }
-        )
+    } catch (e) {
+        console.error(`Erro ao atualizar registro -- ${e}`);
+        resp.status(500).json({
+            "statusCode": 500,
+            "message": 'Erro ao atualizar registro'
+        });
     }
 }
 
