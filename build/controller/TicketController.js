@@ -18,7 +18,6 @@ export function getAllTicket(req, resp) {
             resp.json(tickets);
         }
         catch (e) {
-            // console.log(`Erro ao recuperar registro -- ${e}`)
             resp.status(500).json({
                 "statusCode": 500,
                 "message": `Erro ao recuperar registro - ${e}`
@@ -44,7 +43,6 @@ export function getTicketById(req, resp) {
             });
         }
         catch (e) {
-            // console.log(`Erro ao recuperar registro -- ${e}`)
             resp.status(500).json({
                 "statusCode": 500,
                 "message": `Erro ao recuperar registro ${e}`
@@ -102,13 +100,13 @@ export function insereTicket(req, resp) {
 
                 tipo,
                 data_criacao,
-                nome_evento
-                artista
-                data_evento
-                local_evento
-                horario
-                preco
-                setor
+                nome_evento,
+                artista,
+                data_evento,
+                local_evento,
+                horario,
+                preco,
+                setor,
                 restricoes)
 
                 VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`;
@@ -131,14 +129,12 @@ export function insereTicket(req, resp) {
                 return;
             }
             yield db.run(sql, params);
-            // console.log('Registro adicionado com sucesso')
             resp.status(201).json({
                 "statusCode": 201,
                 "message": 'Registro adicionado com sucesso'
             });
         }
         catch (e) {
-            // console.error(`Erro ao inserir registro -- ${e}`)
             resp.status(500).json({
                 "statusCode": 500,
                 "message": `Erro ao inserir registro ${e}`
@@ -201,7 +197,6 @@ export function updateTicket(req, resp) {
                 });
             }
             else {
-                // console.log('Registro atualizado com sucesso')
                 resp.status(201).json({
                     "statusCode": 201,
                     "message": 'Registro atualizado com sucesso'
@@ -209,7 +204,6 @@ export function updateTicket(req, resp) {
             }
         }
         catch (e) {
-            // console.error(`Erro ao atualizar registro -- ${e}`)
             resp.status(500).json({
                 "statusCode": 500,
                 "message": 'Erro ao atualizar registro'

@@ -117,13 +117,13 @@ export async function insereTicket(req: Request, resp: Response) {
 
                 tipo,
                 data_criacao,
-                nome_evento
-                artista
-                data_evento
-                local_evento
-                horario
-                preco
-                setor
+                nome_evento,
+                artista,
+                data_evento,
+                local_evento,
+                horario,
+                preco,
+                setor,
                 restricoes)
 
                 VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`
